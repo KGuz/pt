@@ -1,7 +1,7 @@
 <div align="left">
   <img title="title" src="./assets/icon.svg" alt="icon" align="left" width="75" style="padding-right: 1ch">
   <h1>pt</h1>
-  <p><strong>Utility library with 2D/3D points</strong></p>
+  <p><strong>Utility library with tools for point arithmetic</strong></p>
 </div>
 
 [![CI Jobs](https://github.com/KGuz/pt/actions/workflows/ci.yml/badge.svg)](https://github.com/KGuz/pt/actions/workflows/ci.yml)
