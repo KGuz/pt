@@ -29,7 +29,7 @@ pt = { git = "https://github.com/KGuz/pt.git" }
 Here are some examples of basic arithmetic operations using the pt library
 
 ```rust
-use pt::prelude::*;
+use pt::*;
 
 let a = pt!(1., 2.);
 let b = pt!(3., 4.);
