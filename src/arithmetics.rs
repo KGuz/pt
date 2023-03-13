@@ -114,3 +114,84 @@ macro_rules! impl_ops {
 }
 
 impl_ops!(i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize, f32, f64);
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[rustfmt::skip]
+    fn addition() {
+        let a: P2<f32> = P2 { x: 10., y: 20. };
+        let b: P3<u64> = P3 { x: 10,  y: 20, z: 30 };
+
+        assert_eq!(10. + a + 1. + a, P2 { x: 31., y: 51. });
+        assert_eq!(10  + b + 1  + b, P3 { x: 31,  y: 51, z: 71 });
+
+        let mut c: P2<i8>  = P2 { x: 10, y: 20 };
+        let mut d: P3<u16> = P3 { x: 10,  y: 20, z: 30 };
+
+        c += 10 + c + 1;
+        d += 10 + d + 1;
+        
+        assert_eq!(c, P2 { x: 31, y: 51 });
+        assert_eq!(d, P3 { x: 31, y: 51, z: 71 });
+    }
+
+    #[test]
+    #[rustfmt::skip]
+    fn subtraction() {
+        let a: P2<i16> = P2 { x: 10,  y: 20 };
+        let b: P3<f64> = P3 { x: 10., y: 20., z: 30. };
+
+        assert_eq!(10  - a - 1  - a, P2 { x: -11,  y: -31 });
+        assert_eq!(10. - b - 1. - b, P3 { x: -11., y: -31., z: -51. });
+
+        let mut c: P2<f32> = P2 { x: 10., y: 20. };
+        let mut d: P3<i64> = P3 { x: 10,  y: 20, z: 30 };
+
+        c -= 10. - c - 1.;
+        d -= 10  - d - 1;
+        
+        assert_eq!(c, P2 { x: 11., y: 31. });
+        assert_eq!(d, P3 { x: 11,  y: 31, z: 51 });
+    }
+
+    #[test]
+    #[rustfmt::skip]
+    fn multiplication() {
+        let a: P2<u8>  = P2 { x: 1, y: 2 };
+        let b: P3<i32> = P3 { x: 1, y: 2, z: 3 };
+
+        assert_eq!(10 * a * 1 * a, P2 { x: 10, y: 40 });
+        assert_eq!(10 * b * 1 * b, P3 { x: 10, y: 40, z: 90 });
+        
+        let mut c: P2<u128> = P2 { x: 1, y: 2 };
+        let mut d: P3<u16>  = P3 { x: 1, y: 2, z: 3 };
+
+        c *= 10 * c * 1;
+        d *= 10 * d * 1;
+
+        assert_eq!(c, P2 { x: 10, y: 40 });
+        assert_eq!(d, P3 { x: 10, y: 40, z: 90 });
+    }
+
+    #[test]
+    #[rustfmt::skip]
+    fn division() {
+        let a: P2<i128> = P2 { x: 1,  y: 2 };
+        let b: P3<f32>  = P3 { x: 1., y: 2., z: 5. };
+
+        assert_eq!(10  / a / 1  / a, P2 { x: 10,  y: 2 });
+        assert_eq!(10. / b / 1. / b, P3 { x: 10., y: 2.5, z: 0.4 });
+
+        let mut c: P2<f32> = P2 { x: 1., y: 2. };
+        let mut d: P3<f64> = P3 { x: 1., y: 2., z: 5. };
+
+        c /= 10. / c / 1.;
+        d /= 10. / d / 1.;
+
+        assert_eq!(c, P2 { x: 0.1, y: 0.4 });
+        assert_eq!(d, P3 { x: 0.1, y: 0.4, z: 2.5 });
+    }
+}
