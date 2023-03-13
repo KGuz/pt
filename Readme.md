@@ -35,16 +35,16 @@ let a = pt!(1., 2.);
 let b = pt!(3., 4.);
 
 // Addition
-let sum = a + b;        // Pt2 { x: 4.0, y: 6.0 }
+let sum = a + b;        // P2 { x: 4.0, y: 6.0 }
 
 // Subtraction
-let difference = a - b; // Pt2 { x: -2.0, y: -2.0 }
+let difference = a - b; // P2 { x: -2.0, y: -2.0 }
 
 // Multiplication
-let product = a * 2.;   // Pt2 { x: 2.0, y: 4.0 }
+let product = a * 2.;   // P2 { x: 2.0, y: 4.0 }
 
 // Division
-let quotient = b / 2.;  // Pt2 { x: 1.5, y: 2.0 }
+let quotient = b / 2.;  // P2 { x: 1.5, y: 2.0 }
 
 ```
 
