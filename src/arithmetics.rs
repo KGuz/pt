@@ -3,7 +3,6 @@ use std::ops::*;
 
 macro_rules! impl_op_for {
     ($($path:ident)::+, $fn:ident, $ty:ty) => {
-        // P2
         impl $($path)::+<$ty> for P2<$ty> {
             type Output = P2<$ty>;
             fn $fn(self, other: $ty) -> Self::Output {
@@ -31,7 +30,6 @@ macro_rules! impl_op_for {
                 }
             }
         }
-        // P3
         impl $($path)::+<$ty> for P3<$ty> {
             type Output = P3<$ty>;
             fn $fn(self, other: $ty) -> Self::Output {
@@ -67,7 +65,6 @@ macro_rules! impl_op_for {
 
 macro_rules! impl_op_assign_for {
     ($($path:ident)::+, $fn:ident, $ty:ty) => {
-        // P2
         impl $($path)::+<$ty> for P2<$ty> {
             fn $fn(&mut self, other: $ty) {
                 self.x.$fn(other);
@@ -80,7 +77,6 @@ macro_rules! impl_op_assign_for {
                 self.y.$fn(other.y);
             }
         }
-        // P3
         impl $($path)::+<$ty> for P3<$ty> {
             fn $fn(&mut self, other: $ty) {
                 self.x.$fn(other);
