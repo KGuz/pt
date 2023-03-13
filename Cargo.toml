@@ -7,4 +7,3 @@ edition = "2021"
 opt-level = 3
 
 [dependencies]
-num = "0.4.0"
