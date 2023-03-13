@@ -1,5 +1,5 @@
-mod arithmetics;
-mod implementations;
+mod arith;
+mod impls;
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub struct P2<T> {
