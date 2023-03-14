@@ -1,7 +1,7 @@
-use crate::{P2, P3};
-use std::ops::*;
+use crate::*;
+use std::ops;
 
-impl<T: Neg<Output = T>> Neg for P2<T> {
+impl<T: ops::Neg<Output = T>> ops::Neg for P2<T> {
     type Output = Self;
     fn neg(self) -> Self {
         P2 {
@@ -11,7 +11,7 @@ impl<T: Neg<Output = T>> Neg for P2<T> {
     }
 }
 
-impl<T: Neg<Output = T>> Neg for P3<T> {
+impl<T: ops::Neg<Output = T>> ops::Neg for P3<T> {
     type Output = Self;
     fn neg(self) -> Self {
         P3 {
@@ -118,16 +118,16 @@ macro_rules! impl_op_assign_for {
 macro_rules! impl_ops {
     ($($ty:ty),*) => {
         $(
-            impl_op_for!(Add, add, $ty);
-            impl_op_for!(Sub, sub, $ty);
-            impl_op_for!(Mul, mul, $ty);
-            impl_op_for!(Div, div, $ty);
-            impl_op_for!(Rem, rem, $ty);
-            impl_op_assign_for!(AddAssign, add_assign, $ty);
-            impl_op_assign_for!(SubAssign, sub_assign, $ty);
-            impl_op_assign_for!(MulAssign, mul_assign, $ty);
-            impl_op_assign_for!(DivAssign, div_assign, $ty);
-            impl_op_assign_for!(RemAssign, rem_assign, $ty);
+            impl_op_for!(ops::Add, add, $ty);
+            impl_op_for!(ops::Sub, sub, $ty);
+            impl_op_for!(ops::Mul, mul, $ty);
+            impl_op_for!(ops::Div, div, $ty);
+            impl_op_for!(ops::Rem, rem, $ty);
+            impl_op_assign_for!(ops::AddAssign, add_assign, $ty);
+            impl_op_assign_for!(ops::SubAssign, sub_assign, $ty);
+            impl_op_assign_for!(ops::MulAssign, mul_assign, $ty);
+            impl_op_assign_for!(ops::DivAssign, div_assign, $ty);
+            impl_op_assign_for!(ops::RemAssign, rem_assign, $ty);
 
         )*
     };
@@ -138,6 +138,7 @@ impl_ops!(i8, u8, i16, u16, i32, u32, i64, u64, i128, u128, isize, usize, f32, f
 #[cfg(test)]
 mod tests {
     use super::*;
+    use ops::{Rem, RemAssign};
 
     #[test]
     #[rustfmt::skip]

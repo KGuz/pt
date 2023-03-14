@@ -1,4 +1,4 @@
-use crate::{P2, P3};
+use crate::*;
 
 impl<T> P2<T> {
     pub fn new(x: T, y: T) -> Self {
