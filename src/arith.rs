@@ -128,7 +128,6 @@ macro_rules! impl_ops {
             impl_op_assign_for!(ops::MulAssign, mul_assign, $ty);
             impl_op_assign_for!(ops::DivAssign, div_assign, $ty);
             impl_op_assign_for!(ops::RemAssign, rem_assign, $ty);
-
         )*
     };
 }

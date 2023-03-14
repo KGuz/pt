@@ -72,49 +72,67 @@ impl<T: Copy> From<&mut [T; 3]> for P3<T> {
     }
 }
 
-// TODO: change From to TryFrom for following implementations
-
-impl<T> From<Vec<T>> for P2<T> {
-    fn from(vec: Vec<T>) -> Self {
-        assert_eq!(vec.len(), 2, "Invalid length of vector");
-        P2::from_iter(vec.into_iter())
+impl<T> TryFrom<Vec<T>> for P2<T> {
+    type Error = &'static str;
+    fn try_from(vec: Vec<T>) -> Result<Self, Self::Error> {
+        match vec.len() {
+            2 => Ok(P2::from_iter(vec.into_iter())),
+            _ => Err("Invalid length of vector"),
+        }
     }
 }
 
-impl<T: Copy> From<&Vec<T>> for P2<T> {
-    fn from(vec: &Vec<T>) -> Self {
-        assert_eq!(vec.len(), 2, "Invalid length of vector");
-        P2::from_iter(vec.iter().cloned())
+impl<T: Copy> TryFrom<&Vec<T>> for P2<T> {
+    type Error = &'static str;
+    fn try_from(vec: &Vec<T>) -> Result<Self, Self::Error> {
+        match vec.len() {
+            2 => Ok(P2::from_iter(vec.iter().cloned())),
+            _ => Err("Invalid length of vector"),
+        }
     }
 }
 
-impl<T: Copy> From<&[T]> for P2<T> {
-    fn from(slice: &[T]) -> Self {
-        assert_eq!(slice.len(), 2, "Invalid length of slice");
-        P2::from_iter(slice.iter().cloned())
+impl<T: Copy> TryFrom<&[T]> for P2<T> {
+    type Error = &'static str;
+    fn try_from(slice: &[T]) -> Result<Self, Self::Error> {
+        match slice.len() {
+            2 => Ok(P2::from_iter(slice.iter().cloned())),
+            _ => Err("Invalid length of slice"),
+        }
     }
 }
 
-impl<T> From<Vec<T>> for P3<T> {
-    fn from(vec: Vec<T>) -> Self {
-        assert_eq!(vec.len(), 3, "Invalid length of vector");
-        P3::from_iter(vec.into_iter())
+impl<T> TryFrom<Vec<T>> for P3<T> {
+    type Error = &'static str;
+    fn try_from(vec: Vec<T>) -> Result<Self, Self::Error> {
+        match vec.len() {
+            3 => Ok(P3::from_iter(vec.into_iter())),
+            _ => Err("Invalid length of vector"),
+        }
     }
 }
 
-impl<T: Copy> From<&Vec<T>> for P3<T> {
-    fn from(vec: &Vec<T>) -> Self {
-        assert_eq!(vec.len(), 3, "Invalid length of vector");
-        P3::from_iter(vec.iter().cloned())
+impl<T: Copy> TryFrom<&Vec<T>> for P3<T> {
+    type Error = &'static str;
+    fn try_from(vec: &Vec<T>) -> Result<Self, Self::Error> {
+        match vec.len() {
+            3 => Ok(P3::from_iter(vec.iter().cloned())),
+            _ => Err("Invalid length of vector"),
+        }
     }
 }
 
-impl<T: Copy> From<&[T]> for P3<T> {
-    fn from(slice: &[T]) -> Self {
-        assert_eq!(slice.len(), 3, "Invalid length of slice");
-        P3::from_iter(slice.iter().cloned())
+impl<T: Copy> TryFrom<&[T]> for P3<T> {
+    type Error = &'static str;
+    fn try_from(slice: &[T]) -> Result<Self, Self::Error> {
+        match slice.len() {
+            3 => Ok(P3::from_iter(slice.iter().cloned())),
+            _ => Err("Invalid length of slice"),
+        }
     }
 }
+
+// TODO: implement TryFrom for ndarray::Array1, imageproc::Point behind feature flag
 
 impl<T> From<P2<T>> for (T, T) {
     fn from(P2 { x, y }: P2<T>) -> Self {
@@ -188,8 +206,6 @@ impl<T: Copy> From<&mut P3<T>> for [T; 3] {
     }
 }
 
-// TODO: implement TryFrom for ndarray::Array1, imageproc::Point behind feature flag
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -227,46 +243,55 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn into_tuple() {
-        let mut a = P2 { x: 1, y: 2 };
-        let mut b = P3 { x: &1, y: &2, z: &3 };
-
+        let a = P2 { x: 1, y: 2 };
+        let b = P3 { x: &1, y: &2, z: &3 };
         assert_eq!(<P2<_> as Into<(_, _)>>::into(a), (1, 2));
         assert_eq!(<P3<&_> as Into<(_, _, _)>>::into(b), (&1, &2, &3));
+        
+        let a = &P2 { x: 1, y: 2 };
+        let b = &P3 { x: &1, y: &2, z: &3 };
+        assert_eq!(<&P2<_> as Into<(_, _)>>::into(a), (1, 2));
+        assert_eq!(<&P3<&_> as Into<(_, _, _)>>::into(b), (&1, &2, &3));
 
-        assert_eq!(<&P2<_> as Into<(_, _)>>::into(&a), (1, 2));
-        assert_eq!(<&P3<&_> as Into<(_, _, _)>>::into(&b), (&1, &2, &3));
-
-        assert_eq!(<&mut P2<_> as Into<(_, _)>>::into(&mut a), (1, 2));
-        assert_eq!(<&mut P3<&_> as Into<(_, _, _)>>::into(&mut b), (&1, &2, &3));
+        let a = &mut P2 { x: 1, y: 2 };
+        let b = &mut P3 { x: &1, y: &2, z: &3 };
+        assert_eq!(<&mut P2<_> as Into<(_, _)>>::into(a), (1, 2));
+        assert_eq!(<&mut P3<&_> as Into<(_, _, _)>>::into(b), (&1, &2, &3));
     }
 
     #[test]
     #[rustfmt::skip]
     fn into_array() {
-        let mut a = P2 { x: 1, y: 2 };
-        let mut b = P3 { x: &1, y: &2, z: &3 };
-
+        let a = P2 { x: 1, y: 2 };
+        let b = P3 { x: &1, y: &2, z: &3 };
         assert_eq!(<P2<_> as Into<[_; 2]>>::into(a), [1, 2]);
         assert_eq!(<P3<&_> as Into<[_; 3]>>::into(b), [&1, &2, &3]);
 
-        assert_eq!(<&P2<_> as Into<[_; 2]>>::into(&a), [1, 2]);
-        assert_eq!(<&P3<&_> as Into<[_; 3]>>::into(&b), [&1, &2, &3]);
+        let a = &P2 { x: 1, y: 2 };
+        let b = &P3 { x: &1, y: &2, z: &3 };
+        assert_eq!(<&P2<_> as Into<[_; 2]>>::into(a), [1, 2]);
+        assert_eq!(<&P3<&_> as Into<[_; 3]>>::into(b), [&1, &2, &3]);
 
-        assert_eq!(<&mut P2<_> as Into<[_; 2]>>::into(&mut a), [1, 2]);
-        assert_eq!(<&mut P3<&_> as Into<[_; 3]>>::into(&mut b), [&1, &2, &3]);
+        let a = &mut P2 { x: 1, y: 2 };
+        let b = &mut P3 { x: &1, y: &2, z: &3 };
+        assert_eq!(<&mut P2<_> as Into<[_; 2]>>::into(a), [1, 2]);
+        assert_eq!(<&mut P3<&_> as Into<[_; 3]>>::into(b), [&1, &2, &3]);
     }
 
     #[test]
     #[rustfmt::skip]
-    fn from_vec() {
+    fn try_from_vec() {
         let a = P2 { x: 1, y: 2 };
         let b = P3 { x: &1, y: &2, z: &3 };
 
-        assert_eq!(a, P2::from(vec![1, 2]));
-        assert_eq!(b, P3::from(vec![&1, &2, &3]));
+        assert_eq!(Ok(a), P2::try_from(vec![1, 2]));
+        assert_eq!(Ok(b), P3::try_from(vec![&1, &2, &3]));
 
-        assert_eq!(a, P2::from(&vec![1, 2]));
-        assert_eq!(b, P3::from(&vec![&1, &2, &3]));
+        assert_eq!(Ok(a), P2::try_from(&vec![1, 2]));
+        assert_eq!(Ok(b), P3::try_from(&vec![&1, &2, &3]));
+
+        assert_eq!(Err("Invalid length of vector"), P2::try_from(vec![1]));
+        assert_eq!(Err("Invalid length of vector"), P3::try_from(vec![&1, &2]));
     }
 
     #[test]
@@ -275,19 +300,10 @@ mod tests {
         let a = P2 { x: 1, y: 2 };
         let b = P3 { x: &1, y: &2, z: &3 };
 
-        assert_eq!(a, P2::from([1, 2].as_slice()));
-        assert_eq!(b, P3::from([&1, &2, &3].as_slice()));
-    }
+        assert_eq!(Ok(a), P2::try_from([1, 2].as_slice()));
+        assert_eq!(Ok(b), P3::try_from([&1, &2, &3].as_slice()));
 
-    #[test]
-    #[should_panic(expected = "Invalid length of vector")]
-    fn from_bad_vec() {
-        let _ = P2::from(vec![1]);
-    }
-
-    #[test]
-    #[should_panic(expected = "Invalid length of slice")]
-    fn from_bad_slice() {
-        let _ = P3::from([1].as_slice());
+        assert_eq!(Err("Invalid length of slice"), P2::try_from([1].as_slice()));
+        assert_eq!(Err("Invalid length of slice"), P3::try_from([&1, &2].as_slice()));
     }
 }

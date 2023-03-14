@@ -103,6 +103,7 @@ mod tests {
     }
 
     #[test]
+    #[rustfmt::skip]
     fn into_iter() {
         let a = P2 { x: &1, y: &2 };
         let b = P3 { x: &1, y: &2, z: &3 };
