@@ -1,23 +1,23 @@
 use crate::*;
 use std::array;
 
-impl<T: Default> FromIterator<T> for P2<T> {
+impl<T> FromIterator<T> for P2<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let mut iter = iter.into_iter().take(2);
         P2 {
-            x: iter.next().unwrap_or_default(),
-            y: iter.next().unwrap_or_default(),
+            x: iter.next().expect("Invalid length of iter"),
+            y: iter.next().expect("Invalid length of iter"),
         }
     }
 }
 
-impl<T: Default> FromIterator<T> for P3<T> {
+impl<T> FromIterator<T> for P3<T> {
     fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
         let mut iter = iter.into_iter().take(3);
         P3 {
-            x: iter.next().unwrap_or_default(),
-            y: iter.next().unwrap_or_default(),
-            z: iter.next().unwrap_or_default(),
+            x: iter.next().expect("Invalid length of iter"),
+            y: iter.next().expect("Invalid length of iter"),
+            z: iter.next().expect("Invalid length of iter"),
         }
     }
 }
@@ -76,4 +76,44 @@ impl<'a, T> IntoIterator for &'a mut P3<T> {
     }
 }
 
-// TODO: add unit tests
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[rustfmt::skip]
+    fn from_iter() {
+        let a = P2 { x: &1, y: &2 };
+        let b = P3 { x: &1, y: &2, z: &3 };
+
+        assert_eq!(a, P2::from_iter([1, 2].iter()));
+        assert_eq!(b, P3::from_iter([1, 2, 3].iter()));
+
+        let c = P2 { x: 1, y: 2 };
+        let d = P3 { x: 1, y: 2, z: 3 };
+
+        assert_eq!(c, P2::from_iter([1, 2].into_iter()));
+        assert_eq!(d, P3::from_iter([1, 2, 3].into_iter()));
+    }
+
+    #[test]
+    #[should_panic(expected = "Invalid length of iter")]
+    fn from_bad_iter() {
+        let _ = P2::from_iter([1].into_iter());
+    }
+
+    #[test]
+    fn into_iter() {
+        let a = P2 { x: &1, y: &2 };
+        let b = P3 { x: &1, y: &2, z: &3 };
+
+        assert!(a.into_iter().eq([1, 2].iter()));
+        assert!(b.into_iter().eq([1, 2, 3].iter()));
+
+        let c = P2 { x: 1, y: 2 };
+        let d = P3 { x: 1, y: 2, z: 3 };
+
+        assert!(c.into_iter().eq([1, 2].into_iter()));
+        assert!(d.into_iter().eq([1, 2, 3].into_iter()));
+    }
+}
