@@ -5,7 +5,7 @@
 </div>
 
 [![CI Jobs](https://github.com/KGuz/pt/actions/workflows/ci.yml/badge.svg)](https://github.com/KGuz/pt/actions/workflows/ci.yml)
-[![Project Status](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![Project Status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License MIT](https://img.shields.io/badge/license-MIT-blue)](#license)
 
 ## About
@@ -29,23 +29,18 @@ pt = { git = "https://github.com/KGuz/pt.git" }
 Here are some examples of basic arithmetic operations using the pt library
 
 ```rust
-use pt::*;
+use {approx::*, pt::*};
 
-let a = pt!(1., 2.);
-let b = pt!(3., 4.);
+let a = pt![1., 1.];
+let b = pt![1., 0.];
 
-// Addition
-let sum = a + b;        // P2 { x: 4.0, y: 6.0 }
+// Basic arithmetic
+let equation = ((1. + b) * 1. - a * a) / 1.;
+assert_eq!(equation, pt![1., 0.]);
 
-// Subtraction
-let difference = a - b; // P2 { x: -2.0, y: -2.0 }
-
-// Multiplication
-let product = a * 2.;   // P2 { x: 2.0, y: 4.0 }
-
-// Division
-let quotient = b / 2.;  // P2 { x: 1.5, y: 2.0 }
-
+// Linear algebra
+let equation = (a.cross(&b).mag() / a.dot(&b)).atan();
+assert_relative_eq!(equation, a.angle(&b));
 ```
 
 ## Contributing

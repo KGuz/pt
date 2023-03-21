@@ -18,19 +18,50 @@ pub struct P3<T> {
 
 #[macro_export]
 macro_rules! pt {
-    ($p: expr) => {{
-        todo!("recursive macro that calls P2::from($p) or P3::from($p) based on the number of elements");
-    }};
+    ($p: expr) => {
+        $p.into()
+    };
 
     ($x: expr, $y: expr) => {
-        P2 { x: $x, y: $y }
+        P2::new($x, $y)
     };
 
     ($x: expr, $y: expr, $z: expr) => {
-        P3 {
-            x: $x,
-            y: $y,
-            z: $z,
-        }
+        P3::new($x, $y, $z)
     };
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use approx::*;
+
+    #[test]
+    fn pt_macro() {
+        let a: P2<i32> = pt!(1, 2);
+        let b: P3<i32> = pt!(1, 2, 3);
+
+        let _: P2<i32> = pt!(a);
+        let _: P3<i32> = pt!(b);
+
+        let _: P2<i32> = pt!((1, 2));
+        let _: P3<i32> = pt!((1, 2, 3));
+
+        let _: P2<i32> = pt!([1, 2]);
+        let _: P3<i32> = pt!([1, 2, 3]);
+    }
+
+    #[test]
+    fn readme() {
+        let a = pt![1., 1.];
+        let b = pt![1., 0.];
+
+        // Basic arithmetic
+        let equation = ((1. + b) * 1. - a * a) / 1.;
+        assert_eq!(equation, pt![1., 0.]);
+
+        // Linear algebra
+        let equation = (a.cross(&b).mag() / a.dot(&b)).atan();
+        assert_relative_eq!(equation, a.angle(&b));
+    }
 }

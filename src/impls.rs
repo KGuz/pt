@@ -249,10 +249,7 @@ impl<T: Copy + NumCast + Debug> P3<T> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::f64::{
-        consts::{FRAC_PI_2, FRAC_PI_4},
-        EPSILON,
-    };
+    use approx::*;
 
     #[test]
     fn indexing() {
@@ -289,15 +286,17 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn equations_2d() {
+        use std::f64::{consts::FRAC_PI_4, EPSILON};
+
         let a = P2 { x: 3, y: 4 };
         let b = P2 { x: 6, y: 8 };
-        assert!((a.mag()    - 5.).abs() < EPSILON);
-        assert!((a.dist(&b) - 5.).abs() < EPSILON);
+        assert_relative_eq!(a.mag(),    5.);
+        assert_relative_eq!(a.dist(&b), 5.);
 
         let a = P2 { x: 1, y: 1 };
         let b = P2 { x: 1, y: 0 };
-        assert!((a.phase()   - FRAC_PI_4).abs() < EPSILON);
-        assert!((a.angle(&b) - FRAC_PI_4).abs() < EPSILON);
+        assert_relative_eq!(a.phase(),   FRAC_PI_4);
+        assert_relative_eq!(a.angle(&b), FRAC_PI_4);
 
         let a = P2 { x: 3.,    y: -4.    };
         let b = P2 { x: 3./5., y: -4./5. };
@@ -317,14 +316,16 @@ mod tests {
     #[test]
     #[rustfmt::skip]
     fn equations_3d() {
+        use std::f64::{consts::FRAC_PI_2, EPSILON};
+
         let a = P3 { x: 2, y: 2, z: 1 };
         let b = P3 { x: 4, y: 4, z: 2 };
-        assert!((a.mag()    - 3.).abs() < EPSILON);
-        assert!((a.dist(&b) - 3.).abs() < EPSILON);
+        assert_relative_eq!(a.mag(),    3.);
+        assert_relative_eq!(a.dist(&b), 3.);
 
         let a = P3 { x: 1, y: 1, z:  1 };
         let b = P3 { x: 1, y: 0, z: -1 };
-        assert!((a.angle(&b) - FRAC_PI_2).abs() < EPSILON);
+        assert_relative_eq!(a.angle(&b), FRAC_PI_2);
 
         let a = P3 { x: 4.,    y: -4.,    z: 2.    };
         let b = P3 { x: 2./3., y: -2./3., z: 1./3. };
